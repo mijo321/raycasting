@@ -9,6 +9,13 @@ var oldCycleTime = 0;
 var cycleCount = 0;
 var fps_rate = 'calculating..';
 
+
+// screen
+const WIDTH = 300, half_width = 150;
+const HEIGHT = 200, half_height = 100;
+
+
+
 // map
 const MAP_SIZE = 16;
 const MAP_SCALE = 10; // increasing this parameter makes the quality of the render better
@@ -63,17 +70,15 @@ document.onkeyup = function(event){
 
 
 
+
+
+
+
 // camera 
 const DOUBLE_PI = 2 * Math.PI;
 const FOV = Math.PI / 3;
-const HALF_FOV = FOV / 2
-
-// screen
-const WIDTH = 300, half_width = 150;
-const HEIGHT = 200, half_height = 100;
-
-
-var i = 0;
+const HALF_FOV = FOV / 2;
+const STEP_ANGLE = FOV / WIDTH;
 
 
 // game loop
@@ -89,15 +94,12 @@ function gameLoop(){
     if (cycleCount % 60 == 1) fps_rate = Math.floor(1000 / cycleTime)
 
     // rezise canvas
-    canvas.WIDTH = window.innerWidth * 0.5;
-    canvas.HEIGHT = window.innerHeight * 0.5;
+    canvas.width = window.innerWidth * 0.5;
+    canvas.height = window.innerHeight * 0.5;
     
-
-
-
     // update screen
     context.fillStyle = 'black';
-    context.fillRect(canvas.WIDTH / 2 - half_width, canvas.HEIGHT / 2 - half_height, WIDTH, HEIGHT);
+    context.fillRect(canvas.width / 2 - half_width, canvas.height / 2 - half_height, WIDTH, HEIGHT);
 
     // update player position
     var playerOffsetX = Math.sin(playerAngle) * MAP_SPEED;
@@ -111,8 +113,8 @@ function gameLoop(){
 
 
     // calculate map & player offset
-    var mapOffsetX = Math.floor(canvas.WIDTH / 2 - MAP_RANGE / 2);
-    var mapOffsetY = Math.floor(canvas.HEIGHT / 2 - MAP_RANGE / 2);
+    var mapOffsetX = Math.floor(canvas.width / 2 - MAP_RANGE / 2);
+    var mapOffsetY = Math.floor(canvas.height / 2 - MAP_RANGE / 2);
     var playerMapX = playerX + mapOffsetX;
     var playerMapY = playerY + mapOffsetY
 
@@ -148,6 +150,16 @@ function gameLoop(){
     context.lineTo(playerMapX + Math.sin(playerAngle) * 25, playerMapY + Math.cos(playerAngle) * 25);
     context.stroke();
 
+    //raycasting
+    var currentAngle = playerAngle;
+    var rayStartX = Math.floor(playerX / MAP_SCALE) * MAP_SCALE;
+    var rayStartY = Math.floor(playerY / MAP_SCALE) * MAP_SCALE;
+
+    var currentSin = Math.sin(currentAngle); currentSin = currentSin ? currentSin : 0.000000000001;
+    var currentCos = Math.cos(currentAngle); currentCos = currentCos ? currentCos : 0.000000000001;
+    
+    // vertical line intersection
+    var rayEndX, rayEndY, rayDirectionX
 
     // infinite loop
     setTimeout(gameLoop, CYCLE_DELAY);
@@ -157,7 +169,6 @@ function gameLoop(){
     // render FPS to screen
     context.fillStyle = 'black';
     context.font = '16px Monospace';
-    console.log(fps_rate)
     context.fillText('FPS: ' + fps_rate, 10, 30)
     
 }
