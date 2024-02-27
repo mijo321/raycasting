@@ -11,34 +11,51 @@ var fps_rate = 'calculating..';
 
 
 // screen
-const WIDTH = 300, half_width = 150;
-const HEIGHT = 200, half_height = 100;
+const WIDTH = 600, half_width = 300;
+const HEIGHT = 400, half_height = 200;
 
 
 
 // map
-const MAP_SIZE = 16;
+const MAP_SIZE = 32;
 const MAP_SCALE = 10; // increasing this parameter makes the quality of the render better
 const MAP_RANGE = MAP_SCALE * MAP_SIZE;
 const MAP_SPEED = (MAP_SCALE / 2) / 10;
 var map = [
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1,
-    1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1,
-    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 ]   
+var showMap = false;   
 
 // player 
 var playerX = MAP_SCALE + 20;
@@ -55,6 +72,7 @@ document.onkeydown = function(event){
         case 'ArrowUp': playerMoveX = 1; playerMoveY = 1; break;
         case 'ArrowLeft': playerMoveAngle = 1; break;
         case 'ArrowRight': playerMoveAngle = -1; break;
+        case 'Shift': showMap = true; break;
     }
 }
 
@@ -64,6 +82,7 @@ document.onkeyup = function(event){
         case 'ArrowUp': playerMoveX = 0; playerMoveY = 0; break;
         case 'ArrowLeft':
         case 'ArrowRight': playerMoveAngle = 0; break;
+        case 'Shift': showMap = false; break;
     }
 }
 
@@ -113,43 +132,12 @@ function gameLoop(){
 
 
     // calculate map & player offset
-    var mapOffsetX = Math.floor(canvas.width / 2 - MAP_RANGE / 2);
-    var mapOffsetY = Math.floor(canvas.height / 2 - MAP_RANGE / 2);
-    var playerMapX = playerX + mapOffsetX;
-    var playerMapY = playerY + mapOffsetY
+    var mapOffsetX = Math.floor(canvas.width / 2) - 300;
+    var mapOffsetY = 45;
+    var playerMapX = (playerX / MAP_SCALE) * 10 + mapOffsetX;
+    var playerMapY = (playerY / MAP_SCALE) * 10 + mapOffsetY
 
-    // draw 2D map
-    for (var row = 0; row < MAP_SIZE; row++) {
-        for ( var col = 0; col < MAP_SIZE; col++){
-            var square = row *  MAP_SIZE + col;
-            if (map[square] == 1){
-                context.fillStyle = '#555';
-                context.fillRect(
-                    mapOffsetX + col * MAP_SCALE ,
-                    mapOffsetY + row * MAP_SCALE, MAP_SCALE, MAP_SCALE 
-                    );
-            } else{
-                context.fillStyle = '#aaa';
-                context.fillRect(
-                    mapOffsetX + col * MAP_SCALE ,  
-                    mapOffsetY + row * MAP_SCALE, MAP_SCALE, MAP_SCALE
-                    );
-            }
-        }
-    }
-
-    // draw player on 2D map
-    context.fillStyle = 'red';
-    context.beginPath();
-    context.arc(playerMapX, playerMapY, 2, 0, DOUBLE_PI);
-    context.fill();
-    context.strokeStyle = 'blue';
-    context.lineWidth = '1';    
-    context.beginPath();
-    context.moveTo(playerMapX, playerMapY);
-    context.lineTo(playerMapX + Math.sin(playerAngle) * 5, playerMapY + Math.cos(playerAngle) * 5);
-    context.stroke();
-
+    
     //raycasting
     var currentAngle = playerAngle + HALF_FOV;
     var rayStartX = Math.floor(playerX / MAP_SCALE) * MAP_SCALE;
@@ -217,16 +205,30 @@ function gameLoop(){
         context.stroke();
         */
         
+        /*
         var endX = verticalDepth < horizontalDepth ? tempX : rayEndX;
         var endY = verticalDepth < horizontalDepth ? tempY : rayEndY;
         
-       // draw ray    
+        
+        // draw ray    
         context.strokeStyle = 'yellow';
         context.lineWidth = '1';    
         context.beginPath();
         context.moveTo(playerMapX, playerMapY);
         context.lineTo(endX + mapOffsetX, endY + mapOffsetY);
         context.stroke();
+        */
+        
+        // render 3d projection 
+        var depth = verticalDepth < horizontalDepth ? verticalDepth : horizontalDepth;
+        depth *= Math.cos(playerAngle - currentAngle)
+        var wallHeight = Math.min(MAP_SCALE * 500 / (depth + 0.00000001), HEIGHT);
+        context.fillStyle = verticalDepth < horizontalDepth ? '#aaa' : '#555';
+        context.fillRect(mapOffsetX + ray, mapOffsetY + (HEIGHT / 2 - wallHeight / 2), 1, wallHeight);
+
+
+
+
 
         // update current angle 
         currentAngle -= STEP_ANGLE;
@@ -234,18 +236,52 @@ function gameLoop(){
     }
 
     
+    // draw map on left shift press
+
+    if (showMap) {
+         // draw 2D map
+        for (var row = 0; row < MAP_SIZE; row++) {
+            for ( var col = 0; col < MAP_SIZE; col++){
+                var square = row *  MAP_SIZE + col;
+                if (map[square] == 1){
+                    context.fillStyle = '#555';
+                    context.fillRect(
+                        mapOffsetX + col * 10,
+                        mapOffsetY + row * 10, 10, 10 
+                        );
+                } else{
+                    context.fillStyle = '#aaa';
+                    context.fillRect(
+                        mapOffsetX + col * 10,  
+                        mapOffsetY + row * 10, 10, 10
+                        );
+                }
+            }
+        }
+    
+        // draw player on 2D map
+        context.fillStyle = 'red';
+        context.beginPath();
+        context.arc(playerMapX, playerMapY, 2, 0, DOUBLE_PI);
+        context.fill();
+        context.strokeStyle = 'blue';
+        context.lineWidth = '1';    
+        context.beginPath();
+        context.moveTo(playerMapX, playerMapY);
+        context.lineTo(playerMapX + Math.sin(playerAngle) * 5, playerMapY + Math.cos(playerAngle) * 5);
+        context.stroke();
+    
+    }
+
+    // infinite loop
+    setTimeout(gameLoop, CYCLE_DELAY);
 
 
 
-       // infinite loop
-        setTimeout(gameLoop, CYCLE_DELAY);
-
-
-
-       // render FPS to screen
-        context.fillStyle = 'black';
-        context.font = '16px Monospace';
-        context.fillText('FPS: ' + fps_rate, 10, 30)
+    // render FPS to screen
+    context.fillStyle = 'black';
+    context.font = '16px Monospace';
+    context.fillText('FPS: ' + fps_rate, 10, 30)
 
 }
 
