@@ -53,7 +53,7 @@ var map = [
     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 ]   
 var showMap = false;   
 
@@ -88,16 +88,23 @@ document.onkeyup = function(event){
 
 
 
-
-
-
-
-
 // camera 
 const DOUBLE_PI = 2 * Math.PI;
 const FOV = Math.PI / 3;
 const HALF_FOV = FOV / 2;
 const STEP_ANGLE = FOV / WIDTH;
+
+
+// graphics
+const WALLS = [];
+
+//load wall textures
+for (var fileName  = 0; fileName < 5; fileName++) {
+    var image = document.createElement('img');
+    if (fileName === 0) {image.src = 'assets/walls/' + fileName + '.png';}
+    else{image.src = 'assets/walls/' + fileName + '.jpeg';}
+    WALLS.push(image);
+}
 
 
 // game loop
@@ -116,10 +123,6 @@ function gameLoop(){
     canvas.width = window.innerWidth * 0.5;
     canvas.height = window.innerHeight * 0.5;
     
-    // update screen
-    context.fillStyle = 'black';
-    context.fillRect(canvas.width / 2 - half_width, canvas.height / 2 - half_height, WIDTH, HEIGHT);
-
     // update player position
     var playerOffsetX = Math.sin(playerAngle) * MAP_SPEED;
     var playerOffsetY = Math.cos(playerAngle) * MAP_SPEED;
@@ -137,7 +140,12 @@ function gameLoop(){
     var playerMapX = (playerX / MAP_SCALE) * 10 + mapOffsetX;
     var playerMapY = (playerY / MAP_SCALE) * 10 + mapOffsetY
 
+    // draw background
+    var img = WALLS[0];
+    context.drawImage(img, canvas.width / 2 - half_width, canvas.height / 2 - half_height,  WIDTH, HEIGHT);
     
+
+
     //raycasting
     var currentAngle = playerAngle + HALF_FOV;
     var rayStartX = Math.floor(playerX / MAP_SCALE) * MAP_SCALE;
