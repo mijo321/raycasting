@@ -112,8 +112,8 @@ let enemies = [
         'dead_images': deadImages,
         'dead_count': 0,
         'isDead': false,
-        'x': 600,  // x-coordinate on the map
-        'y': 277,
+        'x': 500,  // x-coordinate on the map
+        'y': 300,
         'scale': 1.0,
         'shift': 1
     },
@@ -213,7 +213,7 @@ const DOUBLE_PI = 2 * Math.PI;
 const FOV = Math.PI / 3;
 const HALF_FOV = FOV / 2;
 const STEP_ANGLE = FOV / WIDTH;
-let CENTRAL_RAY = Math.floor(WIDTH / 2);
+let CENTRAL_RAY = Math.floor(WIDTH / 2) - 1;
 
 
 
@@ -265,7 +265,8 @@ function gameLoop(){
     var mapOffsetX = Math.floor(canvas.width / 2) - HALF_WIDTH;
     var mapOffsetY = Math.floor(canvas.height / 2) - HALF_HEIGHT;
     var playerMapX = (playerX / MAP_SCALE) * 10 + mapOffsetX;
-    var playerMapY = (playerY / MAP_SCALE) * 10 + mapOffsetY
+    var playerMapY = (playerY / MAP_SCALE) * 10 + mapOffsetY;
+    
 
     // draw background
     var img = WALLS[0];
@@ -399,8 +400,8 @@ function gameLoop(){
     
     // render enemies
     for (let enemy of enemies) {
-        let enemyX = enemy['x'] - playerX;
-        let enemyY = enemy['y'] - playerY;  
+        var enemyX = enemy['x'] - playerX;
+        var enemyY = enemy['y'] - playerY;  
         let enemyDistance = Math.sqrt(enemyX * enemyX + enemyY * enemyY);
         let enemy2playerAngle = Math.atan2(enemyX, enemyY);
         let player2enemyAngle = enemy2playerAngle - playerAngle;
@@ -411,12 +412,12 @@ function gameLoop(){
         let enemy_ray = CENTRAL_RAY - shiftRays;
         let enemy_height;
         if (enemy['isDead'] === true) {
-            enemy_height = Math.min(enemy['scale'] * MAP_SCALE * 300 / (enemyDistance + 0.0001), 400);
+            enemy_height = Math.min(enemy['scale'] * MAP_SCALE * 300 / (enemyDistance + 0.0000001), 400);
         } else {
-            enemy_height = enemy['scale'] * MAP_SCALE * 300 / (enemyDistance + 0.0001);
+            enemy_height = enemy['scale'] * MAP_SCALE * 300 / (enemyDistance + 0.00000001);
         }
         if (!enemy['isDead']) {
-            if (Math.abs(shiftRays) < 20 && enemyDistance < 500 && gun['animation']) {
+            if (Math.abs(shiftRays) < 300 && enemyDistance < 500 && gun['animation']) {
                 enemy['image'] = enemy.dead_images[Math.floor(enemy.dead_count / 8)];
                 enemy.dead_count += 1;
                 if (enemy.dead_count >= 16) {
@@ -448,6 +449,9 @@ function gameLoop(){
         if (!enemy['isDead']) {
             enemy['image'] = enemy.default;
         }
+
+        let multi = enemy_height / enemy.default;
+        let enemyWidth = enemy.width * multi;
         let sprite_image = enemy['image']; // Removed the Python function pygame.transform.scale
         zbuffer.push({
             'image': sprite_image,
@@ -455,6 +459,12 @@ function gameLoop(){
             'y': 300 - enemy_height * enemy['shift'],
             'distance': enemyDistance
         });
+
+        var enemyMapX = (enemyX / MAP_SCALE) * 10 + mapOffsetX;
+        var enemyMapY = (enemyY / MAP_SCALE) * 10 + mapOffsetY;
+        
+        
+        
     
     }
 
@@ -503,7 +513,16 @@ function gameLoop(){
         context.moveTo(playerMapX, playerMapY);
         context.lineTo(playerMapX + Math.sin(playerAngle) * 5, playerMapY + Math.cos(playerAngle) * 5);
         context.stroke();
+
+        // draw enemy on 2D map
+        context.beginPath();
+        context.arc(enemyMapX +200, enemyMapY, 2, 0, DOUBLE_PI);
+        context.fill();
+        context.strokeStyle = 'red';
+        context.lineWidth = '1';
+        context.stroke();
     
+
     }
 
     // fix wall layout
@@ -518,10 +537,11 @@ function gameLoop(){
     // render FPS to screen
     context.fillStyle = 'black';
     context.font = '16px Monospace';
-    context.fillText('FPS: ' + fps_rate, 10, 30)
-    context.fillText('X' + playerX, 10, 40)
-    context.fillText('Y' + playerY, 10, 50)
-    
+    context.fillText('FPS: ' + fps_rate, 10, 20)
+    context.fillText('X' + playerX, 10, 30)
+    context.fillText('Y' + playerY, 10, 42)
+    context.fillText('Enemy X' + enemyX, 200, 30)
+    context.fillText('Enemy Y' + enemyY, 200, 42)
 
 
 
