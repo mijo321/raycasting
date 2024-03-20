@@ -83,11 +83,11 @@ let gun = {
     'shot_count': 0,
     'animation': false
 }
-gun.default.src = 'images/sprites/shotgun_0.png';
-gun.shot[0].src = 'images/sprites/shotgun_0.png';
-gun.shot[1].src = 'images/sprites/shotgun_1.png';
-gun.shot[2].src = 'images/sprites/shotgun_2.png';
-gun.shot[3].src = 'images/sprites/shotgun_2.png';
+gun.default.src = 'assets/sprites/shotgun_0.png';
+gun.shot[0].src = 'assets/sprites/shotgun_0.png';
+gun.shot[1].src = 'assets/sprites/shotgun_1.png';
+gun.shot[2].src = 'assets/sprites/shotgun_2.png';
+gun.shot[3].src = 'assets/sprites/shotgun_2.png';
 
 
 
@@ -99,11 +99,11 @@ let deadImages = [
     new Image(),
     new Image()
 ];
-deadImages[0].src = 'images/sprites/soldier_dead_0.png';
-deadImages[1].src = 'images/sprites/soldier_dead_1.png';
-deadImages[2].src = 'images/sprites/soldier_dead_2.png';
-deadImages[3].src = 'images/sprites/soldier_dead_3.png';
-deadImages[4].src = 'images/sprites/soldier_dead_4.png';
+deadImages[0].src = 'assets/sprites/soldier_dead_0.png';
+deadImages[1].src = 'assets/sprites/soldier_dead_1.png';
+deadImages[2].src = 'assets/sprites/soldier_dead_2.png';
+deadImages[3].src = 'assetes/sprites/soldier_dead_3.png';
+deadImages[4].src = 'assets/sprites/soldier_dead_4.png';
 
 let enemies = [
     {
@@ -120,7 +120,7 @@ let enemies = [
 ];
 
 for (let i = 0; i < enemies.length; i++) {
-    enemies[i].default.src = 'images/sprites/soldier_1.png';
+    enemies[i].default.src = 'assets/sprites/soldier_1.png';
     enemies[i].default.onload = function() {
         let spriteHeight = 100; // replace with your desired height
         let scale = spriteHeight / enemies[i].default.height;
