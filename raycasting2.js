@@ -102,7 +102,7 @@ let deadImages = [
 deadImages[0].src = 'assets/sprites/soldier_dead_0.png';
 deadImages[1].src = 'assets/sprites/soldier_dead_1.png';
 deadImages[2].src = 'assets/sprites/soldier_dead_2.png';
-deadImages[3].src = 'assetes/sprites/soldier_dead_3.png';
+deadImages[3].src = 'assets/sprites/soldier_dead_3.png';
 deadImages[4].src = 'assets/sprites/soldier_dead_4.png';
 
 let enemies = [
