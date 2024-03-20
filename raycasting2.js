@@ -83,16 +83,15 @@ let gun = {
     'shot_count': 0,
     'animation': false
 }
-gun.default.src = 'images/sprites/gun_0.png';
-gun.shot[0].src = 'images/sprites/gun_0.png';
-gun.shot[1].src = 'images/sprites/gun_1.png';
-gun.shot[2].src = 'images/sprites/gun_2.png';
-gun.shot[3].src = 'images/sprites/gun_2.png';
+gun.default.src = 'images/sprites/shotgun_0.png';
+gun.shot[0].src = 'images/sprites/shotgun_0.png';
+gun.shot[1].src = 'images/sprites/shotgun_1.png';
+gun.shot[2].src = 'images/sprites/shotgun_2.png';
+gun.shot[3].src = 'images/sprites/shotgun_2.png';
 
 
 
 // enemies 
-
 let deadImages = [
     new Image(),
     new Image(),
@@ -122,8 +121,28 @@ let enemies = [
 
 for (let i = 0; i < enemies.length; i++) {
     enemies[i].default.src = 'images/sprites/soldier_1.png';
-}
+    enemies[i].default.onload = function() {
+        let spriteHeight = 100; // replace with your desired height
+        let scale = spriteHeight / enemies[i].default.height;
+        let spriteWidth = enemies[i].default.width * scale;
 
+        // Create a temporary canvas to draw the scaled image
+        let tempCanvas = document.createElement('canvas');
+        tempCanvas.width = spriteWidth;
+        tempCanvas.height = spriteHeight;
+        let tempContext = tempCanvas.getContext('2d');
+
+        // Draw the image onto the temporary canvas
+        tempContext.drawImage(enemies[i].default, 0, 0, spriteWidth, spriteHeight);
+
+        // Export the temporary canvas to a new image
+        let scaledImage = new Image();
+        scaledImage.src = tempCanvas.toDataURL();
+
+        // Now you can use scaledImage as a scaled version of your original image
+        enemies[i].default = scaledImage;
+    };
+}
 /*
 // enemies
 let sprites = [
@@ -224,7 +243,7 @@ const WALLS = [];
 // load wall textures
 for (var fileName  = 0; fileName < 5; fileName++) {
     var image = document.createElement('img');
-    if (fileName === 0) {image.src = 'assets/walls/' + fileName + '.png';}
+    if (fileName === 0 || fileName === 1 || fileName === 2) {image.src = 'assets/walls/' + fileName + '.png';}
     else{image.src = 'assets/walls/' + fileName + '.jpeg';}
     WALLS.push(image);
 }
@@ -386,18 +405,9 @@ function gameLoop(){
 
     }
 
-    // render gun
-    context.drawImage(gun['default'], HALF_WIDTH, HALF_HEIGHT - 50, 300, 300);
-    if (gun['animation']) {
-        gun['animation'] = true;
-        context.drawImage(gun['shot'][Math.floor(gun['shot_count'] / 5)], HALF_WIDTH, HALF_HEIGHT - 50, 300, 300);
-        gun['shot_count'] += 1;
-        if (gun['shot_count'] >= 20) {
-            gun['shot_count'] = 0; 
-            gun['animation'] = false;
-        }
-    }
-    
+
+
+
     // render enemies
     for (let enemy of enemies) {
         var enemyX = enemy['x'] - playerX;
@@ -412,9 +422,9 @@ function gameLoop(){
         let enemy_ray = CENTRAL_RAY - shiftRays;
         let enemy_height;
         if (enemy['isDead'] === true) {
-            enemy_height = Math.min(enemy['scale'] * MAP_SCALE * 300 / (enemyDistance + 0.0000001), 400);
+            enemy_height = Math.min(enemy['scale'] * MAP_SCALE * 300 / (enemyDistance + 0.0001), 400);
         } else {
-            enemy_height = enemy['scale'] * MAP_SCALE * 300 / (enemyDistance + 0.00000001);
+            enemy_height = enemy['scale'] * MAP_SCALE * 300 / (enemyDistance + 0.0001);
         }
         if (!enemy['isDead']) {
             if (Math.abs(shiftRays) < 300 && enemyDistance < 500 && gun['animation']) {
@@ -452,23 +462,22 @@ function gameLoop(){
 
         let multi = enemy_height / enemy.default;
         let enemyWidth = enemy.width * multi;
-        let sprite_image = enemy['image']; // Removed the Python function pygame.transform.scale
+        let spriteImage = enemy['image']
         zbuffer.push({
-            'image': sprite_image,
+            'image': spriteImage,
             'x': enemy_ray - Math.floor(enemy_height / 2),
             'y': 300 - enemy_height * enemy['shift'],
             'distance': enemyDistance
         });
 
-        var enemyMapX = (enemyX / MAP_SCALE) * 10 + mapOffsetX;
-        var enemyMapY = (enemyY / MAP_SCALE) * 10 + mapOffsetY;
+        var enemyMapX = (( enemy_ray - Math.floor(enemy_height / 2)) / MAP_SCALE) * 10 + mapOffsetX;
+        var enemyMapY = (( 300 - enemy_height * enemy['shift']) / MAP_SCALE) * 10 + mapOffsetY;
+        
+        var enemyTextX = enemy_ray - Math.floor(enemy_height / 2);
+        var enemyTextY = 300 - enemy_height * enemy['shift'];
         
         
-        
-    
     }
-
-
 
     // Sort and render sprites
     zbuffer.sort((a, b) => b.distance - a.distance);
@@ -477,6 +486,23 @@ function gameLoop(){
         if (item && item.image) {
             context.drawImage(item.image, item.x, item.y);
         }
+    }
+
+
+
+    // render gun
+    
+    if (gun['animation']) {
+        gun['animation'] = true;
+        context.drawImage(gun['shot'][Math.floor(gun['shot_count'] / 5)], HALF_WIDTH + 50, HEIGHT - 150, 200, 200);
+        gun['shot_count'] += 1;
+        if (gun['shot_count'] >= 20) {
+            gun['shot_count'] = 0; 
+            gun['animation'] = false;
+        }
+    }
+    else{
+        context.drawImage(gun['default'], HALF_WIDTH + 50, HEIGHT - 150, 200, 200);
     }
 
 
@@ -516,7 +542,7 @@ function gameLoop(){
 
         // draw enemy on 2D map
         context.beginPath();
-        context.arc(enemyMapX +200, enemyMapY, 2, 0, DOUBLE_PI);
+        context.arc(enemyMapX, enemyMapY, 2, 0, DOUBLE_PI);
         context.fill();
         context.strokeStyle = 'red';
         context.lineWidth = '1';
@@ -540,8 +566,8 @@ function gameLoop(){
     context.fillText('FPS: ' + fps_rate, 10, 20)
     context.fillText('X' + playerX, 10, 30)
     context.fillText('Y' + playerY, 10, 42)
-    context.fillText('Enemy X' + enemyX, 200, 30)
-    context.fillText('Enemy Y' + enemyY, 200, 42)
+    context.fillText('Enemy X' + enemyTextX, 200, 30)
+    context.fillText('Enemy Y' + enemyTextY, 200, 42)
 
 
 
